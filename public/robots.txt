@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://drm.biz.id/sitemap.xml

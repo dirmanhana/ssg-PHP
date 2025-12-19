@@ -1,0 +1,55 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    DirectoryIndex index.php index.html
+
+    # Explicitly redirect /admin to /admin/index.php
+    RewriteRule ^admin/?$ admin/index.php [L]
+
+    # Tag Pages: domain.com/tag/foo -> public/static/tags/foo.html
+    RewriteRule ^tag/([^/]+)$ public/static/tags/$1.html [L]
+
+    # Category Pages: domain.com/category/foo -> public/static/categories/foo.html
+    RewriteRule ^category/([^/]+)$ public/static/categories/$1.html [L]
+
+    # Post Pages: domain.com/foo -> public/static/posts/foo.html
+    # We check if the html file exists first to avoid conflict with other files
+    RewriteCond %{DOCUMENT_ROOT}/public/static/posts/$1.html -f
+    RewriteRule ^([^/]+)$ public/static/posts/$1.html [L]
+
+    # Redirect root to public/index.html
+    RewriteRule ^$ public/index.html [L]
+
+    # If the request points to a file or directory that exists in public, rewrite to it
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f
+    RewriteRule ^(.*)$ public/$1 [L]
+    
+    # If the request points to a file or directory that exists in public/static/posts (for clean URLs like /halo-dunia)
+    RewriteCond %{DOCUMENT_ROOT}/public/static/posts/$1.html -f
+    RewriteRule ^([^/]+)$ public/static/posts/$1.html [L]
+
+    # Standard fallback to public for other assets
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{REQUEST_URI} !^/admin/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Enable Gzip Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Enable Browser Caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType text/x-javascript "access plus 1 month"
+    ExpiresByType application/x-shockwave-flash "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresDefault "access plus 2 days"
+</IfModule>

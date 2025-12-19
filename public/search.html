@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Pencarian Artikel di Blog dirman. Temukan topik yang Anda sukai.">
+  <title>Pencarian - Blog dirman</title>
+  <link rel="canonical" href="https://drm.biz.id/search.html">
+  <link href="style.css?v=1766132607" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet"
+    type="text/css" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+    rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="/favicon.ico">
+  <style>
+    .search-input {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.2rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="site-nav">
+    <div class="container">
+      <a href="index.html" class="site-brand">Blog dirman</a>
+      <button class="menu-toggle" aria-label="Toggle Navigation">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      <div class="nav-links">
+                  <a href="/index.html">Home</a>
+                  <a href="/#">Contact</a>
+                  <a href="/About.html">About</a>
+                <a href="/search.html" style="margin-left: 15px;">🔍</a>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    document.querySelector('.menu-toggle').addEventListener('click', function () {
+      document.querySelector('.nav-links').classList.toggle('active');
+    });
+  </script>
+
+  <!-- Page Header -->
+  <header class="site-header" role="img" aria-label="Books Library Background"
+    style="background-image: url('https://source.unsplash.com/random/1600x900/?books,library');">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="site-heading">
+        <h1>Pencarian</h1>
+        <span class="subheading">Temukan artikel yang Anda cari</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container content-container">
+    <input type="text" id="searchInput" class="search-input" placeholder="Ketik kata kunci...">
+    <div id="searchResults"></div>
+  </div>
+
+  <script>
+    let posts = [];
+
+    fetch('search.json')
+      .then(response => response.json())
+      .then(data => {
+        posts = data;
+      });
+
+    const searchInput = document.getElementById('searchInput');
+    const resultsContainer = document.getElementById('searchResults');
+
+    searchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      resultsContainer.innerHTML = '';
+
+      if (term.length < 2) return;
+
+      const filtered = posts.filter(post =>
+        post.title.toLowerCase().includes(term) ||
+        post.summary.toLowerCase().includes(term) ||
+        (post.tags && post.tags.some(tag => tag.toLowerCase().includes(term)))
+      );
+
+      if (filtered.length === 0) {
+        resultsContainer.innerHTML = '<p>Tidak ditemukan hasil.</p>';
+        return;
+      }
+
+      filtered.forEach(post => {
+        const item = document.createElement('div');
+        item.className = 'post-preview';
+        item.innerHTML = `
+          <a href="/${post.slug}">
+            <h2 class="post-title">${post.title}</h2>
+            <h3 class="post-subtitle">${post.summary}</h3>
+          </a>
+          <p class="post-meta">Posted on ${new Date(post.published_at).toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+          <hr class="divider">
+        `;
+        resultsContainer.appendChild(item);
+      });
+    });
+  </script>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="copyright">
+        Copyright &copy; blog dirman 2025      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
