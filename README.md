@@ -1,5 +1,6 @@
 # ssg-PHP
-repo ini berisi kode skrip php blog yang membuild file html satis nya, ala ala ssg moderen
+repo ini berisi kode skrip php blog yang membuild file html satis nya, ala ala ssg moderen, cocok untuk shared hosting, tinggal upload langsung jalan,
+untuk menu admin bisa di akses di domainanda.com/admin/index.php
 
 
 <img src="https://github.com/dirmanhana/ssg-PHP/blob/main/Screenshot%20from%202025-12-19%2016-42-37.png">
